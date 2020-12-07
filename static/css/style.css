@@ -1,5 +1,6 @@
 html, body {
     height: 100%;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .login-page{
@@ -17,7 +18,7 @@ html, body {
 }
 
 .login-box{
-    background-color: rgba(17, 55, 68, 0.5);
+    background-color: #a2a9aa;
     border-radius: 10px;
     border: 1px solid #2ca1c8;
     top: 40%;
@@ -40,7 +41,37 @@ html, body {
     border-color: rgb(17, 55, 68);
 }
 
+.error-message{
+    text-align: left;
+    color: red;
+    padding: 5px;
+    font-size: 14px;
+    margin-bottom: 0px !important;
+} 
+
 .login-footer{
     position: absolute;
     bottom: 0px;
+}
+
+.layout-navbar{
+    background-color: #a2a9aa;
+}
+
+.nav-link{
+    color: #024358 !important;
+    font-weight: bolder;
+}
+
+.active .nav-link{
+    color: #001820 !important;
+}
+
+.jumbotron{
+    background-color: #b4eafc;
+}
+
+.footer{
+    padding: 20px 0px 20px 0px;
+    background-color: #b4eafc;
 }

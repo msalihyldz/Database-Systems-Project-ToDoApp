@@ -1,10 +1,25 @@
 {% extends "layout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
+<header class="jumbotron">
+    <div class="container">
+        <div  class="row row-header">
+            <div class="col-12 col-sm-6">
+                <h1>Organize Your Jobs!</h1>
+                <p>This application helps you to arrange and classify your jobs. Also, you can use workspaces as a team. <b>Enjoy being organized!</b> </p>
+            </div>
+            <div class="col-12 col-sm">
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container">
+    
     <h1>My movie collection</h1>
     <p>Have a nice day !</p>
 
     <ul>
         <li><a href="{{ url_for('workspace_page') }}">List movies</a></li>
     </ul>
+</div>
 {% endblock %}
