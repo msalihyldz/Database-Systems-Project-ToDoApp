@@ -30,6 +30,10 @@ def create_app():
         "/login", view_func=views.login_page, methods=["GET", "POST"]
     )
 
+    app.add_url_rule(
+        "/signup", view_func=views.signup_page, methods=["GET", "POST"]
+    )
+
     app.add_url_rule("/workspace", view_func=views.workspace_page)
     app.add_url_rule("/statistics", view_func=views.statistics_page)
     app.add_url_rule("/login", view_func=views.login_page)

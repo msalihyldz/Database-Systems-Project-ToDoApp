@@ -30,7 +30,6 @@
                                     {% endif %}
                                     {% endwith %}
                                 </div>
-                                
                             </div>
                             <div class="form-group row">
                                 <label for="inputPassword" class="col-sm-3 col-form-label">Password :</label>
@@ -50,6 +49,8 @@
                             </div>
                             <button type="submit" class="btn btn-primary">Login</button>
                         </form>
+                        <label class="mt-3"><b>Don't you have an account?</b></label>
+                        <label class="sign-up"><a href="{{ url_for('signup_page') }}" ><u>Sign Up!</u></a></label>
                     </div>
                 </div>
             </div>
