@@ -1,3 +1,7 @@
 {
-    "name": "ToDoApp"
-}
+    "addons": [
+      {
+        "plan": "heroku-postgresql"
+      }
+    ]
+  }

@@ -17,7 +17,6 @@ def initialize(url):
             cursor.execute(statement)
         cursor.close()
 
-
 if __name__ == "__main__":
     url = os.getenv("DATABASE_URL")
     if url is None:
