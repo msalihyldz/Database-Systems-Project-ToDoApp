@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 from flask_login import LoginManager
 import views
+import os
 from account import get_user
 
 lm = LoginManager()
@@ -46,4 +47,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
