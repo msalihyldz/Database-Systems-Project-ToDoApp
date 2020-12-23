@@ -21,7 +21,10 @@ def add_numbers():
     return jsonify(result=a + b)
 
 
-
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 def create_app():
     app.config.from_object("settings")
@@ -38,7 +41,6 @@ def create_app():
     app.add_url_rule("/workspace", view_func=views.workspace_page)
     app.add_url_rule("/statistics", view_func=views.statistics_page)
     app.add_url_rule("/login", view_func=views.login_page)
-    app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon.ico'))
 
     lm.init_app(app)
     lm.login_view = "login_page"
