@@ -12,16 +12,13 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand mr-auto font-weight-bold" href="#">
+            <a class="navbar-brand mr-auto font-weight-bold" href="/">
               <img src="/static/images/logo.png" style="max-height: 50px;" />
             </a>
             <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown">
               <ul class="navbar-nav">
                 <li {%- if request.path == "/" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
                     <a class="nav-link" href="/">Home</a>
-                </li>
-                <li {%- if request.path == "/workspace" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
-                    <a class="nav-link" href="/workspace">Workspaces</a>
                 </li>
                 <li {%- if request.path == "/statistics" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
                   <a class="nav-link" href="/statistics">Statistics</a>
@@ -31,9 +28,8 @@
                     Account
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="#">Account</a>
+                    <a class="dropdown-item" href="#">Log out</a>
                   </div>
                 </li>
               </ul>

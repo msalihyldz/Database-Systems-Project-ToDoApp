@@ -103,3 +103,82 @@ html, body {
     background-color: #131d30;
     color: white;
 }
+
+.workspace-card{
+    border: 2px solid #08505e;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 3%;
+}
+
+.horizontal-scrollable{
+    border: 3px solid #00d2ff;
+    border-radius: 5px;
+    padding: 10px 40px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.horizontal-scrollable > .row { 
+    overflow-x: auto; 
+    white-space: nowrap;
+    display: block !important;
+} 
+  
+.horizontal-scrollable > .row > .ws-list { 
+    display: inline-table; 
+    float: none; 
+}
+
+.custom-scrollbar-js,
+.custom-scrollbar-css {
+  height: 500px;
+}
+
+/* Custom Scrollbar using CSS */
+.custom-scrollbar-css {
+  overflow-x: scroll;
+}
+
+/* scrollbar width */
+.custom-scrollbar-css::-webkit-scrollbar {
+  width: 3px;
+  height: 10px;
+}
+
+/* scrollbar track */
+.custom-scrollbar-css::-webkit-scrollbar-track {
+  background: #eee;
+}
+
+/* scrollbar handle */
+.custom-scrollbar-css::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  background-color: #00d2ff;
+  background-image: linear-gradient(to top, #00d2ff 0%, #3a7bd5 100%);
+}
+
+.ws-list{
+    background-color: white;
+    height: 300px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.list-title{
+    margin-top: 10px;
+    border: 1px solid black;
+    border-radius: 15px;
+    padding: 5px;
+}
+
+.list-title > h5 {
+    margin-bottom: 0px !important;
+}
+
+.task{
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-top: 8px;
+}
