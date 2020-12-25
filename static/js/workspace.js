@@ -1,5 +1,12 @@
 $( document ).ready(function() {
-    console.log( "ready!" );
+  var maxHeight = 0;
+  $('.ws-list').each(function() {
+    if($(this).height() > maxHeight){
+      console.log($(this).height());
+      maxHeight = $(this).height();
+    }
+  });
+  $('.ws-list').height(maxHeight);
 });
 $(function() {
     $('a#testButton').on('click', function(e) {
@@ -25,29 +32,6 @@ $(function() {
   });
 });
 
-$(function() {
-  /* Rounded Dots Dark */
-  $("#content-1").mCustomScrollbar({
-    theme: "rounded-dots-dark"
-  });
 
-  /* Rounded Dark */
-  $("#content-2").mCustomScrollbar({
-    theme: "rounded-dark"
-  });
 
-  /* Inset Dark */
-  $("#content-3").mCustomScrollbar({
-    theme: "inset-3-dark"
-  });
 
-  /* 3d Dark */
-  $("#content-4").mCustomScrollbar({
-    theme: "3d-dark"
-  });
-
-  /* Dark Thin */
-  $("#content-5").mCustomScrollbar({
-    theme: "dark-thin"
-  });
-});
