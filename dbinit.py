@@ -1,7 +1,7 @@
 from flask import current_app
 import os
 import sys
-
+import json
 import psycopg2 as dbapi2
 
 
@@ -31,9 +31,11 @@ def getUsers():
     if url is None:
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
+    result = []
     with dbapi2.connect(url) as connection:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM USERS")
         for user in cursor:
-            print(user)
+            result.append(user)
         cursor.close()
+    return result

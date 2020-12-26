@@ -3,6 +3,7 @@ from flask_login import LoginManager
 import views
 import os
 from account import get_user
+import dbinit
 
 lm = LoginManager()
 
@@ -14,11 +15,14 @@ def load_user(user_id):
 
 app = Flask(__name__)
 
-@app.route('/_add_numbers')
-def add_numbers():
-    a = request.args.get('a', 0, type=int)
-    b = request.args.get('b', 0, type=int)
-    return jsonify(result=a + b)
+@app.route('/users', methods=['GET', 'POST'])
+def users():
+    if(request.method == 'GET'):
+        return jsonify(dbinit.getUsers())
+    else:
+        a = request.args.get('a', 0, type=int)
+        b = request.args.get('b', 0, type=int)
+        return jsonify(result=a + b)
 
 
 @app.route('/favicon.ico')
