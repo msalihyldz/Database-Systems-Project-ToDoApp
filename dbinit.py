@@ -36,6 +36,6 @@ def getUsers():
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM USERS")
         for user in cursor:
-            result.append(userModel.User( tuple(user)))
+            result.append(userModel.User(user))
         cursor.close()
     return result
