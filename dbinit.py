@@ -17,18 +17,21 @@ def initialize(url):
             cursor.execute(statement)
         cursor.close()"""
 
-DATABASE_URL = ""
 
 if __name__ == "__main__":
     url = os.getenv("DATABASE_URL")
     if url is None:
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
-    DATABASE_URL = url
+    
 
 
 def getUsers():
-    with dbapi2.connect(DATABASE_URL) as connection:
+    url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    with dbapi2.connect(url) as connection:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM USERS")
         for user in cursor:
