@@ -1,7 +1,7 @@
 from flask import current_app
 import os
 import sys
-import json
+
 import psycopg2 as dbapi2
 
 

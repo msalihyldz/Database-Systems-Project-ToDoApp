@@ -3,6 +3,7 @@ from flask_login import LoginManager
 import views
 import os
 from account import get_user
+import json
 import dbinit
 
 lm = LoginManager()
@@ -18,7 +19,7 @@ app = Flask(__name__)
 @app.route('/users', methods=['GET', 'POST'])
 def users():
     if(request.method == 'GET'):
-        return jsonify(dbinit.getUsers())
+        return json.dumps(dbinit.getUsers())
     else:
         a = request.args.get('a', 0, type=int)
         b = request.args.get('b', 0, type=int)
