@@ -3,5 +3,7 @@ $( document ).ready(function() {
     $.getJSON($SCRIPT_ROOT + '/users', {}, function(data) {
       console.log(data)
     });
+    console.log('as');
     return false;
 });
+
