@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
 
 def getUsers():
-    with dbapi2.connect(url) as connection:
+    with dbapi2.connect(DATABASE_URL) as connection:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM USERS")
         for user in cursor:
