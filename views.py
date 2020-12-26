@@ -6,6 +6,7 @@ from account import get_user
 from flask_login import login_user
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
+import db_query
 
 auth = HTTPBasicAuth()
 
@@ -50,6 +51,7 @@ def signup_page():
     return render_template("signup.html", form=form)
 
 def home_page():
+    db_query.getUsers()
     return render_template("home.html")
 
 def workspace_page():
