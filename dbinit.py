@@ -1,7 +1,7 @@
 from flask import current_app
 import os
 import sys
-
+import userModel
 import psycopg2 as dbapi2
 
 
@@ -36,6 +36,6 @@ def getUsers():
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM USERS")
         for user in cursor:
-            result.append(tuple(user))
+            result.append(userModel.User( tuple(user)))
         cursor.close()
     return result
