@@ -18,7 +18,7 @@ def checkUserMail(email):
     with dbapi2.connect(url) as connection:
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM USERS WHERE EMAIL == %s", (email,))
-        if(len(cursor) > 0):
+        if(len(cursor.fetchall()) > 0):
             result = False
         cursor.close()
     return result
