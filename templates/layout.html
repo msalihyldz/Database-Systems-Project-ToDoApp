@@ -29,7 +29,7 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="#">Account</a>
-                    <a class="dropdown-item" href="#">Log out</a>
+                    <a class="dropdown-item" id="logout">Log out</a>
                   </div>
                 </li>
               </ul>
@@ -53,6 +53,11 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script type=text/javascript>
           $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+          $("#logout").click(function (params) {
+              $.getJSON($SCRIPT_ROOT + '/log_out', {}, function(data) {
+                window.location = $SCRIPT_ROOT + "/login";
+              });
+          })
         </script>
         {% block script%}{% endblock%}
     </body>

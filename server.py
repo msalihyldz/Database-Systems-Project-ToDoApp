@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
-from flask_login import LoginManager
+from flask import Flask, request, jsonify, render_template, send_from_directory, redirect, url_for, flash
+from flask_login import LoginManager, logout_user
 import views
 import os
 from account import get_user
@@ -20,16 +20,22 @@ app = Flask(__name__)
 def users():
     if(request.method == 'GET'):
         return json.dumps(dbinit.getUsers())
-    else:
-        a = request.args.get('a', 0, type=int)
-        b = request.args.get('b', 0, type=int)
-        return jsonify(result=a + b)
+
+
+@app.route('/log_out', methods=['GET'])
+def log_out():
+    logout_user()
+    flash("log out user...")
+    return jsonify("Ok")
 
 
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+def page_not_found(e):
+  return render_template('page404.html'), 404
 
 def create_app():
     app.config.from_object("settings")
@@ -47,11 +53,14 @@ def create_app():
     app.add_url_rule("/statistics", view_func=views.statistics_page)
     app.add_url_rule("/login", view_func=views.login_page)
 
-    lm.init_app(app)
-    lm.login_view = "login_page"
+    app.register_error_handler(404, page_not_found)
 
     return app
 
+
+
+lm.init_app(app)
+lm.login_view = "login_page"
 
 if __name__ == "__main__":
     app = create_app()

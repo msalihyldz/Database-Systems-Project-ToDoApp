@@ -39,3 +39,7 @@ def getUsers():
             result.append(userModel.User(user))
         cursor.close()
     return result
+
+
+
+
