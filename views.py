@@ -40,9 +40,15 @@ def signup_page():
         passwordAgain = form.data["passwordAgain"]
         result = dbop.checkUserMail(email)
         if result:
-            flash(result)
+            if dbop.registerUser(name, surname,email, password) != 0:
+                login_user(user)
+                flash("You have logged in.")
+                next_page = request.args.get("next", url_for("home_page"))
+                return redirect(next_page)
         else:
             flash("Invalid email.", "email")
+    else:
+        flash("Please check entered values", "passwordAgain")
     return render_template("signup.html", form=form)
 
 @login_required
