@@ -45,4 +45,17 @@ def registerUser(name, surname, email, password):
       print(e.pgcode)
       print("mance: ", e.diag.message_detail)
       return messages['error'], -1
-    
+
+def getUsers():
+    url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    result = []
+    with dbapi2.connect(url) as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM USERS")
+        for user in cursor:
+            result.append(user)
+        cursor.close()
+    return result

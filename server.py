@@ -4,7 +4,7 @@ import views
 import os
 from account import get_user
 import json
-import dbinit
+import dbop
 
 lm = LoginManager()
 
@@ -19,7 +19,7 @@ app = Flask(__name__)
 @app.route('/users', methods=['GET', 'POST'])
 def users():
     if(request.method == 'GET'):
-        return json.dumps(dbinit.getUsers())
+        return json.dumps(dbop.getUsers())
 
 
 @app.route('/log_out', methods=['GET'])
