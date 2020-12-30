@@ -12,12 +12,12 @@
                 <div class="container signup-box">
                     <img src="/static/images/logo.png" >
                     <div>
-                        <form action="" method="post" name="signUp">
+                        <form action="{{ request.path }}" method="post" name="signUp">
                             {{ form.csrf_token }}
                             <div class="form-group row">
-                                <label for="staticEmail" class="col-sm-3 col-form-label">Name :</label>
+                                <label for="Name" class="col-sm-3 col-form-label">Name :</label>
                                 <div class="col-sm-8">
-                                    {{ form.name(required=True, autofocus=True,
+                                    {{ form.name( autofocus=True,
                                         class='input is-large form-control',
                                         placeholder='Name') }}
                                     {% with errors = get_flashed_messages(category_filter=["name"]) %}
@@ -32,9 +32,9 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="staticEmail" class="col-sm-3 col-form-label">Surname :</label>
+                                <label for="Surname" class="col-sm-3 col-form-label">Surname :</label>
                                 <div class="col-sm-8">
-                                    {{ form.surname(required=True, autofocus=True,
+                                    {{ form.surname( autofocus=True,
                                         class='input is-large form-control',
                                         placeholder='Surname') }}
                                     {% with errors = get_flashed_messages(category_filter=["surname"]) %}
@@ -49,9 +49,9 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="staticEmail" class="col-sm-3 col-form-label">Email :</label>
+                                <label for="Email" class="col-sm-3 col-form-label">Email :</label>
                                 <div class="col-sm-8">
-                                    {{ form.email(required=True, autofocus=True,
+                                    {{ form.email( autofocus=True,
                                         class='input is-large form-control',
                                         placeholder='Email') }}
                                     {% with errors = get_flashed_messages(category_filter=["email"]) %}
@@ -66,9 +66,9 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="inputPassword" class="col-sm-3 col-form-label">Password :</label>
+                                <label for="Password" class="col-sm-3 col-form-label">Password :</label>
                                 <div class="col-sm-8">
-                                {{ form.password(required=True, class='input is-large form-control',
+                                {{ form.password( class='input is-large form-control',
                                     placeholder='Password') }}
                                 {% with errors = get_flashed_messages(category_filter=["password"]) %}
                                 {% if errors %}
@@ -82,11 +82,11 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="inputPassword" class="col-sm-3 col-form-label">Password Again :</label>
+                                <label for="RepeatPassword" class="col-sm-3 col-form-label">Repeat Password :</label>
                                 <div class="col-sm-8">
-                                {{ form.password(required=True, class='input is-large form-control',
-                                    placeholder='PasswordAgain') }}
-                                {% with errors = get_flashed_messages(category_filter=["passwordAgain"]) %}
+                                {{ form.repeatpassword( class='input is-large form-control',
+                                    placeholder='Repeat Password') }}
+                                {% with errors = get_flashed_messages(category_filter=["repeatpassword"]) %}
                                 {% if errors %}
                                 {% for error in errors %}
                                     <p class="error-message">

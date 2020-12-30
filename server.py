@@ -11,7 +11,10 @@ lm = LoginManager()
 
 @lm.user_loader
 def load_user(user_id):
-    return get_user(user_id)
+    if type(user_id) is not int and user_id[1] == -1:
+        return None
+    else:
+        return get_user(user_id)
 
 
 app = Flask(__name__)
