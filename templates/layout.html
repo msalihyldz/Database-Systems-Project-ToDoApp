@@ -39,7 +39,7 @@
           <div class="container">
              <div class="row justify-content-center">             
                   <div class="col-auto">
-                      <p>© 2020, Muhammed Salih YILDIZ</p>
+                      <p id="copyRight"></p>
                   </div>
              </div>
           </div>
@@ -58,6 +58,7 @@
                 window.location = $SCRIPT_ROOT + "/login";
               });
           })
+          $('#copyRight').text('© ' + new Date().getFullYear() + ', Muhammed Salih YILDIZ')
         </script>
         {% block script%}{% endblock%}
     </body>
