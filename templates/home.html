@@ -5,7 +5,7 @@
     <div class="container">
         <div  class="row row-header">
             <div class="col-12 col-sm-6">
-                <h1>Organize Your Jobs!</h1>
+                <h1>Welcome {{user.name}}</h1>
                 <p>This application helps you to arrange and classify your jobs. Also, you can use workspaces as a team. <b>Enjoy being organized!</b> </p>
             </div>
             <div class="col-12 col-sm">
@@ -15,59 +15,100 @@
 </header>
 <div class="container">
 
-    <h1 class="mb-5">Your Workspaces</h1>
-
-    <div class="workspace-card">
-        <h3> School </h3>
-        <div class="list-group">
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                BLG-317E HW-1
-                <span class="badge badge-success badge-pill">29/12/2020</span>
-            </a>
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                ATA-1 Quiz
-                <span class="badge badge-danger badge-pill">31/12/2020</span>
-            </a>
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                ATA-1 Quiz
-                <span class="badge badge-danger badge-pill">31/12/2020</span>
-            </a>
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                ATA-1 Quiz
-                <span class="badge badge-danger badge-pill">31/12/2020</span>
-            </a>
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                ATA-1 Quiz
-                <span class="badge badge-disabled badge-pill">31/12/2020</span>
-            </a>
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                ATA-1 Quiz
-                <span class="badge badge-disabled badge-pill">31/12/2020</span>
-            </a>
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                ATA-1 Quiz
-                <span class="badge badge-disabled badge-pill">31/12/2020</span>
-            </a>
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                ATA-1 Quiz
-                <span class="badge badge-danger badge-pill">31/12/2020</span>
-            </a>
+    <div class="row align-items-center mb-3">
+        <div class="col-md-8">
+            <h1>Your Workspaces</h1>
+        </div>
+        <div class="col-md-4 text-right add-workspace">
+            <div class="dropdown">
+                <button id="dLabel" type="button" class="btn add-workspace-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <b>Add a new workspace!<i class="fas fa-plus ml-2"></i></b>
+                </button>
+                <form class="dropdown-menu p-4" action="{{ request.path }}" method="post" name="home">
+                    {{ form.csrf_token }}
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Title :</label>
+                        <div class="col-sm-8">
+                            {{ form.title( autofocus=True,
+                                class='input is-large form-control',
+                                placeholder='Title') }}
+                            {% with errors = get_flashed_messages(category_filter=["title"]) %}
+                            {% if errors %}
+                            {% for error in errors %}
+                                <p class="error-message">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Description:</label>
+                        <div class="col-sm-8">
+                            <textarea id="description" name="description" autofocus="True" class="input is-large form-control" placeholder="Description" rows="2" required></textarea>
+                            {% with errors = get_flashed_messages(category_filter=["description"]) %}
+                            {% if errors %}
+                            {% for error in errors %}
+                                <p class="error-message">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Color :</label>
+                        <div class="col-sm-8">
+                            <div class="color-container">
+                                <input id="color" name="color" type="text" value="#000000" hidden/>
+                                <div id="colorpicker" name="colorpicker" class="color-picker display-inline"></div>
+                                <div class="middle-hex  display-inline">HEX <span>#000000</span></div>
+                            </div>
+                            {% with errors = get_flashed_messages(category_filter=["color"]) %}
+                            {% if errors %}
+                            {% for error in errors %}
+                                <p class="error-message">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Order :</label>
+                        <div class="col-sm-8">
+                            <input id="order" name="order" autofocus="True" type="number" class="input is-large form-control" placeholder="Order" required/>
+                            {% with errors = get_flashed_messages(category_filter=["order"]) %}
+                            {% if errors %}
+                            {% for error in errors %}
+                                <p class="error-message">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+              </div>
         </div>
     </div>
 
-    <div class="workspace-card">
-        <h3> Mobile Project </h3>
-        <div class="list-group">
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                Slider Component
-                <span class="badge badge-danger badge-pill">12/01/2021</span>
-            </a>
-            <a href="{{ url_for('workspace_page') }}" class="list-group-item list-group-item-action list-group-item-primary d-flex justify-content-between align-items-center">
-                List Products
-                <span class="badge badge-danger badge-pill">15/01/2021</span>
-            </a>
+    {% for ws in data %}
+        <div class="workspace-card" style=" color: white !important; background-color: {{ws[0][3]}};">
+            <a href="{{ url_for('workspace_page', wsId=ws[0][0], title=ws[0][2] ) }}" style=" color: white !important" ><h3> {{ ws[0][2]}} </h3></a>
+            <p style="font-size: 18px">
+                {{ws[0][4]}}
+            </p>
+            <span style="font-size: 14px">Total Number of Users: {{ws[0][6]}}</span>
+            <br>
+            <span style="font-size: 14px">Total Number of Tasks: {{ws[0][7]}}</span>
         </div>
-    </div>
+    {% endfor %}
 </div>
 {% endblock %}
 {% block script%}<script src="/static/js/home.js"></script>{% endblock%}

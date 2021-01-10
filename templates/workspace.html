@@ -3,105 +3,237 @@
 {% block content %}
 
 <div class="container">
-    <h1 class="mt-5 mb-5"> School </h1>
-    <div class="container horizontal-scrollable "> 
-        <div class="row text-center custom-scrollbar-js custom-scrollbar-css p-2">
-            <div class="col-md-4 ws-list">
-                <div class="text-center list-title">
-                    <h5>List Title</h5>
+    <div class="row align-items-center mb-3 mt-5">
+        <div class="col-md-6">
+            <h1> {{ ws[2] }} </h1>
+        </div>
+        <div class="col-md-6 text-right add-workspace">
+                <div class="dropdown">
+                    <button id="dLabel" type="button" class="btn add-workspace-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <b>Add a new task!<i class="fas fa-plus ml-2"></i></b>
+                    </button>
+                    <form class="dropdown-menu p-4" id="addTaskForm">
+                        <div class="form-group row">
+                            <label for="content" class="col-sm-3 col-form-label">Content:</label>
+                            <div class="col-sm-8">
+                                <textarea id="content" name="content" autofocus="True" class="input is-large form-control" placeholder="Content" rows="2" required></textarea>
+                                <p id="content-error"></p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="listId" class="col-sm-3 col-form-label">List:</label>
+                            <div class="col-sm-8">
+                                <select id="listId" name="listId" autofocus="True" class="input is-large form-control">
+                                    {% for list in data %}
+                                    <option value="{{ list[0] }}">{{ list[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                                <p id="list-error"></p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="assignedId" class="col-sm-3 col-form-label">Assigned To:</label>
+                            <div class="col-sm-8">
+                                <select id="assignedId" name="assignedId" autofocus="True" class="input is-large form-control">
+                                    <option value="{{ None }}"> Unassigned </option>
+                                    {% for user in users %}
+                                    <option value="{{ user[0] }}">{{ user[1] }} {{user[2]}}</option>
+                                    {% endfor %}
+                                </select>
+                                <p id="assigned-error"></p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="assignedId" class="col-sm-3 col-form-label">Deadline:</label>
+                            <div class="col-sm-8">
+                                <div class="form-group mb-4">
+                                    <div class="datepicker date input-group p-0 shadow-sm">
+                                        <input type="text" class="form-control" id="endDate" data-date-format="dd/mm/yyyy">
+                                        <p id="deadline-error"></p>
+                                        <div class="input-group-append"><span class="input-group-text px-4"><i class="fa fa-clock-o"></i></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="importance" class="col-sm-3 col-form-label">Importance:</label>
+                            <div class="col-sm-8">
+                                <div class="form-group mb-4">
+                                    <input id="importance" name="importance" class="input is-large form-control" placeholder="Importance(1-10)" type="number" min="1" max="10" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="listorder" class="col-sm-3 col-form-label">Order:</label>
+                            <div class="col-sm-8">
+                                <div class="form-group mb-4">
+                                    <input id="listorder" name="listorder" class="input is-large form-control" placeholder="Order" type="number" min="1" required >
+                                </div>
+                            </div>
+                        </div>
+                        <button id="addTaskButton" class="btn btn-primary">Create</button>
+                    </form>
                 </div>
-                <div class="task-list">
-                    <div class="task">
-                        <p>Görev içeriği Görev içeriği Görev içeriği Görev içeriği Görev içeriği Görev içeriği</p>
-                        <span class="task-date badge badge-danger badge-pill">29/12/2020</span>
-                        <span class="assigned-member badge badge-assigned badge-pill">Şeyma Yıldız</span>
-                    </div>
-                    <div class="task">
-                        Task-2
-                    </div>
-                    <div class="task">
-                        Task-3
-                    </div>
-                    <div class="task">
-                        Task-4
-                    </div>
+                <div class="dropdown">
+                    <button id="bLabel" type="button" class="btn add-workspace-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <b>Add a new list!<i class="fas fa-plus ml-2"></i></b>
+                    </button>
+                    <form class="dropdown-menu p-4" id="addListForm">
+                        <input id="wid" name="wid" value="{{ws[0]}}" hidden>
+                        <div class="form-group row">
+                            <label for="listTitle" class="col-sm-3 col-form-label">Title:</label>
+                            <div class="col-sm-8">
+                                <input id="listTitle" name="listTitle" autofocus="True" class="input is-large form-control" placeholder="Title" rows="2" required/>
+                                <p id="listTitle-error"></p>
+                            </div>
+                        </div>
+                        <button id="addListButton" class="btn btn-primary">Create</button>
+                    </form>
                 </div>
-            </div>
-            <div class="col-md-4 ws-list">
-                <div class="text-center list-title">
-                    <h5>List Title</h5>
-                </div>
-                <div class="task-list">
-                    <div class="task">
-                        Task-1
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ws-list">
-                <div class="text-center list-title">
-                    <h5>List Title</h5>
-                </div>
-                <div class="task-list">
-                    <div class="task">
-                        Task-1
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ws-list">
-                <div class="text-center list-title">
-                    <h5>List Title</h5>
-                </div>
-                <div class="task-list">
-                    <div class="task">
-                        Task-1
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 ws-list">
-                <div class="text-center list-title">
-                    <h5>List Title</h5>
-                </div>
-                <div class="task-list">
-                    <div class="task">
-                        Task-1
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4 ws-list">
-                <div class="text-center list-title">
-                    <h5>List Title</h5>
-                </div>
-                <div class="task-list">
-                    <div class="task">
-                        Task-1
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4 ws-list">
-                <div class="text-center list-title">
-                    <h5>List Title</h5>
-                </div>
-                <div class="task-list">
-                    <div class="task">
-                        Task-1
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4 ws-list">
-                <div class="text-center list-title">
-                    <h5>List Title</h5>
-                </div>
-                <div class="task-list">
-                    <div class="task">
-                        Task-1
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+    <div class="container horizontal-scrollable "> 
+        <div class="row text-left custom-scrollbar-js custom-scrollbar-css p-2">
+            {% for list in data %}
+                <div class="col-md-4 ws-list">
+                    <div class="text-center list-title">
+                        <h5>{{ list[1] }}</h5>
+                    </div>
+                    <div class="task-list">
+                        {% for task in list[3] %}
+                            <div class="task">
+                                <p>{{ task[1] }}</p>
+                                {% if task[4] > task[4].now() %}
+                                    <span class="task-date badge badge-success badge-pill">{{ task[4].strftime('%d/%m/%Y') }}</span>
+                                {% else %}
+                                    <span class="task-date badge badge-danger badge-pill">{{ task[4].strftime('%d/%m/%Y') }}</span>
+                                {% endif %}
+                                {% if task[3] != None %}
+                                    <span class="assigned-member badge badge-assigned badge-pill">{{ task[9] }} {{task[10]}}</span>
+                                {% endif %}
+                                <span class="badge badge-importance badge-pill">Importance: {{task[6]}}</span>
+                                <span style="cursor: pointer;" onclick="fillModal('{{ task[0] }}', '{{ task[1] }}', '{{task[2]}}', '{{ task[3] }}' , '{{ task[4] }}' , '{{ task[5] }}', '{{ task[6] }}', '{{ task[7] }}')" class="task-edit" data-toggle="modal" data-target="#taskEditModal"> <i class="fas fa-pen"></i></span>
+                            </div>
+                            <div class="comments">
+                                <span onclick="open_close('{{task[0]}}')" class="comments-text open-close-comments">
+                                    <u>Comments ({{ task[11] | length}}) <i class="fas fa-chevron-down"></i> </u>
+                                </span>
+                                <div class="listcomments" data-taskid="{{task[0]}}" >
+                                    {% for comment in task[11] %}
+                                    <div class="comment">
+                                        <span class="badge badge-commentor badge-pill">{{ comment[5] }} {{comment [6]}}</span>
+                                        <p>{{ comment[3] }}</p>
+                                        <span class="comment-date"><u>{{ comment[4].strftime('%d/%m/%Y') }}</u></span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="addComment comment">
+                                    <input class="input comment-input" data-taskid="{{task[0]}}" placeholder="Add a comment" type="text" >
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="addComment('{{task[0]}}')">Add</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row justify-content-end addFriend">
+        <div class="col-5">
+            <input id="addUser" name="addUser" class="input is-large form-control" placeholder="Add a friend to this workspace with his/her email">
+            <input id="wsId" name="wsId" value="{{ ws[0] }}" hidden>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary" id="btnAddUser">Add</button>
+        </div>
+    </div>
+    <div class="modal fade" id="taskEditModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+                <form class="p-4" id="editTaskForm">
+                    <div class="modal-body">
+                    <div class="form-group row">
+                        <input type="number" id="taskId" name="taskId" class="form-control" value="0" hidden />
+                    </div>
+                    <div class="form-group row">
+                        <label for="content" class="col-sm-3 col-form-label">Content:</label>
+                        <div class="col-sm-8">
+                            <textarea id="edit_content" name="edit_content" autofocus="True" class="input is-large form-control" placeholder="Content" rows="2" required></textarea>
+                            <p id="edit-content-error"></p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="listId" class="col-sm-3 col-form-label">List:</label>
+                        <div class="col-sm-8">
+                            <select id="edit_listId" name="edit_listId" autofocus="True" class="input is-large form-control">
+                                {% for list in data %}
+                                <option value="{{ list[0] }}">{{ list[1] }}</option>
+                                {% endfor %}
+                            </select>
+                            <p id="edit-list-error"></p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="assignedId" class="col-sm-3 col-form-label">Assigned To:</label>
+                        <div class="col-sm-8">
+                            <select id="edit_assignedId" name="edit_assignedId" autofocus="True" class="input is-large form-control">
+                                <option value="{{ None }}"> Unassigned </option>
+                                {% for user in users %}
+                                <option value="{{ user[0] }}">{{ user[1] }} {{user[2]}}</option>
+                                {% endfor %}
+                            </select>
+                            <p id="edit-assigned-error"></p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="assignedId" class="col-sm-3 col-form-label">Deadline:</label>
+                        <div class="col-sm-8">
+                            <div class="form-group mb-4">
+                                <div class="datepicker date input-group p-0 shadow-sm">
+                                    <input type="text" class="form-control" id="edit_endDate" data-date-format="dd/mm/yyyy">
+                                    <p id="edit-deadline-error"></p>
+                                    <div class="input-group-append"><span class="input-group-text px-4"><i class="fa fa-clock-o"></i></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="edit_isDone" class="col-sm-3 col-form-label">Is done:</label>
+                        <div class="col-sm-8">
+                            <input style="font-size: 12px;" type="checkbox" class="" id="edit_isDone" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="importance" class="col-sm-3 col-form-label">Importance:</label>
+                        <div class="col-sm-8">
+                            <div class="form-group mb-4">
+                                <input id="edit_importance" name="edit_importance" placeholder="Importance(1-10)" class="input is-large form-control" type="number" min="1" max="10" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="listorder" class="col-sm-3 col-form-label">Order:</label>
+                        <div class="col-sm-8">
+                            <div class="form-group mb-4">
+                                <input id="edit_listorder" name="edit_listorder" placeholder="Order" class="input is-large form-control" type="number" min="1" required >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button id="editTaskButton" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
     <!--<p><input type=text size=5 name=a> +
         <input type=text size=5 name=b> =
         <span id=result>?</span>
