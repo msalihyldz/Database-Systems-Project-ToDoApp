@@ -24,7 +24,7 @@ messages = {
 
 JOINS = {
     'wsData' : 'SELECT WS.ID, MODIFYDATE, WS.TITLE as ws_title, WS.COLOR as ws_color, WS.DESCRIPTION as ws_description, ws.LISTORDER as ws_order, COUNT(distinct ACCS), count(distinct TSK) FROM workspaces WS LEFT JOIN useraccess ACCS ON WS.id = ACCS.workspaceid LEFT JOIN LIST LST ON WS.id = LST.workspaceid LEFT JOIN TASK TSK ON TSK.listid = LST.id WHERE ws.id = %s GROUP BY WS.ID;',
-    'taskAndUser' : 'SELECT tsk.id AS id,tsk.content AS task_content,tsk.listid AS list_id,tsk.assignedid AS assignedid,tsk.deadline AS end_date,tsk.isdone AS done,tsk.importance AS tsk_importance,tsk.listorder AS list_order,tsk.donedate AS tsk_donedate,usr.name AS user_name,usr.surname AS user_surname FROM task tsk LEFT JOIN users usr ON usr.id=tsk.assignedid WHERE listid = %s',
+    'taskAndUser' : 'SELECT tsk.id AS id,tsk.content AS task_content,tsk.listid AS list_id,tsk.assignedid AS assignedid,tsk.deadline AS end_date,tsk.isdone AS done,tsk.importance AS tsk_importance,tsk.listorder AS list_order,tsk.donedate AS tsk_donedate,usr.name AS user_name,usr.surname AS user_surname FROM task tsk LEFT JOIN users usr ON usr.id=tsk.assignedid WHERE isdone !=True and listid=%s ORDER BY listorder',
     'wsUserList' : 'SELECT usr.id AS id, usr.name AS user_name, usr.surname AS user_surname, usraccss.workspaceid AS ws_id FROM useraccess usraccss JOIN users usr ON usr.id = usraccss.userid WHERE workspaceid = %s',
     'commentData' : 'SELECT c.id AS c_id,c.userid AS c_userid,c.taskid AS c_taskid,c.content AS c_content,c.modifydate AS c_modifydate,u.name AS u_name,u.surname AS u_surname FROM comments c LEFT JOIN users u on c.userid=u.id WHERE taskid = %s'
 }
@@ -178,13 +178,10 @@ def getWorkspaceData(wsId):
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
     try:
-        print(wsId)
         with dbapi2.connect(url) as connection:
             cursor = connection.cursor()
-            print(str(wsId))
             cursor.execute(JOINS['wsData'],(str(wsId),))
             result = cursor.fetchall()
-            print(result)
             connection.commit()
             cursor.close()
         return result
@@ -257,7 +254,7 @@ def getListTasks(lsId):
     try:
         with dbapi2.connect(url) as connection:
             cursor = connection.cursor()
-            cursor.execute(JOINS['taskAndUser'],(str(lsId)))
+            cursor.execute(JOINS['taskAndUser'],(str(lsId),))
             result = cursor.fetchall()
             connection.commit()
             cursor.close()
@@ -375,9 +372,9 @@ def updateTask(taskId, content, listId, assignedId, endDate, isDone, importance,
                     query = f"""UPDATE TASK SET content = '{content}', listid = '{listId}', assignedid = '{assignedId}', deadline = '{endDate}', isDone = '{False}' WHERE id = '{taskId}' """
             else:
                 if isDone:
-                    query = f"""UPDATE TASK SET content = '{content}', listid = '{listId}', deadline = '{endDate}', isDone = '{True}', importance = '{importance}', listorder = '{listorder}', donedate = '{donedate}' WHERE id = '{taskId}' """
+                    query = f"""UPDATE TASK SET content = '{content}', listid = '{listId}', assignedid = NULL, deadline = '{endDate}', isDone = '{True}', importance = '{importance}', listorder = '{listorder}', donedate = '{donedate}' WHERE id = '{taskId}' """
                 else:
-                    query = f"""UPDATE TASK SET content = '{content}', listid = '{listId}', deadline = '{endDate}', isDone = '{False}' WHERE id = '{taskId}' """
+                    query = f"""UPDATE TASK SET content = '{content}', listid = '{listId}', assignedid = NULL, deadline = '{endDate}', isDone = '{False}' WHERE id = '{taskId}' """
             cursor.execute(query)
             res = cursor.rowcount
             connection.commit()
@@ -402,7 +399,7 @@ def addList(title, wid):
     try:
         with dbapi2.connect(url) as connection:
             cursor = connection.cursor()
-            cursor.execute(f"""INSERT INTO LIST(title, workspaceid) VALUES( '{title}', '{wid}') RETURNING ID""")
+            cursor.execute(f"""INSERT INTO LIST(title, workspaceid, createdBy) VALUES( '{title}', '{wid}', '{current_user.uid}') RETURNING ID""")
             print(cursor.query)
             id_ = cursor.fetchone()[0]
             connection.commit()
@@ -459,6 +456,79 @@ def addComment(content, taskId):
             connection.commit()
             cursor.close()
         return id_
+    except dbapi2.IntegrityError as e:
+        print(e.diag.constraint_name)
+        print("error: ", e.diag.message_detail)
+        if e.diag.constraint_name in messages:
+            return messages[e.diag.constraint_name], -1
+        return messages['error'], -1
+    except dbapi2.Error as e:
+        print(e.pgcode)
+        print("error: ", e.diag.message_detail)
+        return messages['error'], -1
+
+def deleteTask(taskId):
+    #url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    now = datetime.now()
+    try:
+        with dbapi2.connect(url) as connection:
+            cursor = connection.cursor()
+            cursor.execute(f"""DELETE FROM TASK WHERE id = '{taskId}'""")
+            connection.commit()
+            cursor.close()
+        return True
+    except dbapi2.IntegrityError as e:
+        print(e.diag.constraint_name)
+        print("error: ", e.diag.message_detail)
+        if e.diag.constraint_name in messages:
+            return messages[e.diag.constraint_name], -1
+        return messages['error'], -1
+    except dbapi2.Error as e:
+        print(e.pgcode)
+        print("error: ", e.diag.message_detail)
+        return messages['error'], -1
+
+def updateWorkspace(wsId, title, description, color, order):
+    #url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    try:
+        with dbapi2.connect(url) as connection:
+            cursor = connection.cursor()
+            query = f"""UPDATE WORKSPACES SET title = '{title}', description = '{description}', color = '{color}', listorder = '{order}' WHERE id = '{wsId}' """
+            cursor.execute(query)
+            res = cursor.rowcount
+            connection.commit()
+            cursor.close()
+        return res
+    except dbapi2.IntegrityError as e:
+        print(e.diag.constraint_name)
+        print("error: ", e.diag.message_detail)
+        if e.diag.constraint_name in messages:
+            return messages[e.diag.constraint_name], -1
+        return messages['error'], -1
+    except dbapi2.Error as e:
+        print(e.pgcode)
+        print("error: ", e.diag.message_detail)
+        return messages['error'], -1
+
+def deleteWorkspace(wsId):
+    #url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    now = datetime.now()
+    try:
+        with dbapi2.connect(url) as connection:
+            cursor = connection.cursor()
+            cursor.execute(f"""DELETE FROM WORKSPACES WHERE id = '{wsId}'""")
+            connection.commit()
+            cursor.close()
+        return True
     except dbapi2.IntegrityError as e:
         print(e.diag.constraint_name)
         print("error: ", e.diag.message_detail)

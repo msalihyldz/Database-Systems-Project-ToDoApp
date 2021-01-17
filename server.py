@@ -102,6 +102,40 @@ def addComment():
     else:
         return "Ok"
 
+@app.route('/deleteTask', methods=['POST'])
+def deleteTask():
+    taskId = request.form["taskId"]
+    result = dbop.deleteTask(taskId)
+    if type(result) is tuple:
+        return "error"
+    else:
+        return "Ok"
+
+@app.route('/editWorkspace', methods=['POST'])
+def editWorkspace():
+    jsonData = request.get_json()
+    wsId = jsonData["wsId"]
+    title = jsonData["title"]
+    description = jsonData["description"]
+    color = jsonData["color"]
+    order = jsonData["order"]
+    print(jsonData)
+    result = dbop.updateWorkspace(wsId, title, description, color, order)
+    if(type(result) == tuple):
+        return jsonify(result = "error")
+    else:
+        return jsonify(result = result)
+    return jsonify(result = 5)
+
+@app.route('/deleteWorkspace', methods=['POST'])
+def deleteWorkspace():
+    wsId = request.form["wsId"]
+    result = dbop.deleteWorkspace(wsId)
+    if type(result) is tuple:
+        return "error"
+    else:
+        return "Ok"
+
 def page_not_found(e):
   return render_template('page404.html'), 404
 

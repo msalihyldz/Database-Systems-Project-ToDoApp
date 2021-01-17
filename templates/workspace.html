@@ -100,7 +100,7 @@
                         <h5>{{ list[1] }}</h5>
                     </div>
                     <div class="task-list">
-                        {% for task in list[3] %}
+                        {% for task in list[4] %}
                             <div class="task">
                                 <p>{{ task[1] }}</p>
                                 {% if task[4] > task[4].now() %}
@@ -227,6 +227,7 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" id="deleteTask" class="btn btn-danger">Delete Task</button>
                       <button id="editTaskButton" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>

@@ -80,7 +80,7 @@
                     <div class="form-group row">
                         <label for="staticEmail" class="col-sm-3 col-form-label">Order :</label>
                         <div class="col-sm-8">
-                            <input id="order" name="order" autofocus="True" type="number" class="input is-large form-control" placeholder="Order" required/>
+                            <input id="order" name="order" autofocus="True" type="number" class="input is-large form-control" placeholder="Order" min="1" required/>
                             {% with errors = get_flashed_messages(category_filter=["order"]) %}
                             {% if errors %}
                             {% for error in errors %}
@@ -107,8 +107,62 @@
             <span style="font-size: 14px">Total Number of Users: {{ws[0][6]}}</span>
             <br>
             <span style="font-size: 14px">Total Number of Tasks: {{ws[0][7]}}</span>
+            <span onclick="fillModal('{{ ws[0][0] }}', '{{ ws[0][1] }}', '{{ ws[0][2] }}', '{{ ws[0][3] }}' , '{{ ws[0][4] }}' , '{{ ws[0][5] }}')" class="ws-edit" data-toggle="modal" data-target="#wsEditModal"> <i class="fas fa-pen"></i></span>
         </div>
     {% endfor %}
+    <div class="modal fade" id="wsEditModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+                <form class="p-4" id="editWorkspaceForm">
+                    <div class="modal-body">
+                    <div class="form-group row">
+                        <input type="number" id="wsId" name="taskId" class="form-control" value="0" hidden />
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Title :</label>
+                        <div class="col-sm-8">
+                            <input type="text" id="edit_title" autofocus="True" class="input is-large form-control" placeholder="Title" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Description:</label>
+                        <div class="col-sm-8">
+                            <textarea id="edit_description" name="description" autofocus="True" class="input is-large form-control" placeholder="Description" rows="2" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Color :</label>
+                        <div class="col-sm-8">
+                            <div class="color-container">
+                                <input id="edit_color" name="color" type="text" value="#000000" hidden/>
+                                <div id="edit_colorpicker" name="colorpicker" class="color-picker display-inline"></div>
+                                <div class="middle-hex  display-inline" id="edit_hex">HEX <span>#000000</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Order :</label>
+                        <div class="col-sm-8">
+                            <input id="edit_order" name="order" autofocus="True" type="number" class="input is-large form-control" placeholder="Order" required min="1"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" id="deleteWorkspace" class="btn btn-danger">Delete Workspace</button>
+                      <button id="editWorkspaceButton" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
 </div>
+
 {% endblock %}
 {% block script%}<script src="/static/js/home.js"></script>{% endblock%}

@@ -77,6 +77,8 @@ def home_page():
             data = dbop.getWorkspaceData(i[2])
             if (type(data) != tuple):
                 wsData.append(data)
+    wsData.sort(key=lambda x:x[0][5])
+    print('wsdata: ',wsData)
     return render_template("home.html", user = current_user, form = form, data = wsData)
 
 @login_required

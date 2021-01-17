@@ -133,6 +133,7 @@ function fillModal(id, content, listid, assignedid, date, isDone, importance, li
   }
   $('#edit_importance').val(importance);
   $('#edit_listorder').val(listorder);
+  $('#deleteTask').attr('data-taskid', id);
 }
 
 $('#editTaskButton').click(() => {
@@ -269,3 +270,17 @@ function addComment(taskId){
     }
   });
 }
+
+$('#deleteTask').click(() => {
+  var taskId = $('#deleteTask').attr('data-taskid');
+  $('#deleteTask').html(`<span class="spinner-border spinner-border-sm"></span>`);
+  $.post($SCRIPT_ROOT + '/deleteTask', {
+    'taskId': taskId
+  }).then((data) => {
+    if(data == "Ok"){
+      window.location.reload();
+    } else {
+      console.log("Error")
+    }
+  });
+})

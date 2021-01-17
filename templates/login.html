@@ -19,7 +19,7 @@
                                 <div class="col-sm-8">
                                     {{ form.email(required=True, autofocus=True,
                                         class='input is-large form-control',
-                                        placeholder='Email') }}
+                                        placeholder='Email', type='email') }}
                                     {% with errors = get_flashed_messages(category_filter=["email"]) %}
                                     {% if errors %}
                                     {% for error in errors %}
