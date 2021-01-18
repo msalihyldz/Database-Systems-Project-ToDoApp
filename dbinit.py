@@ -1,7 +1,6 @@
 from flask import current_app
 import os
 import sys
-import userModel
 import psycopg2 as dbapi2
 
 
