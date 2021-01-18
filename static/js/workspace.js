@@ -170,10 +170,11 @@ $('#editTaskButton').click(() => {
         'listId': form.edit_listId.value, 
         'assignedId': form.edit_assignedId.value,
         'endDate': form.edit_endDate.value,
-        'isDone': form.edit_isDone.value == "on" ? true : false,
+        'isDone': form.edit_isDone.checked,
         'importance': form.edit_importance.value,
         'listorder': form.edit_listorder.value
       }
+      console.log(submitdata.isDone);
       $.ajax({
         type: 'post', 
         url: $SCRIPT_ROOT + '/editTask', 

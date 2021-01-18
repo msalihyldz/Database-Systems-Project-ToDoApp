@@ -1,32 +1,29 @@
 from flask import current_app
 import os
 import sys
-import userModel
 import psycopg2 as dbapi2
 from datetime import datetime
 from flask_login import current_user
 
 import account
 
-url = os.getenv("DATABASE_URL")
+#url = os.getenv("DATABASE_URL")
 
-#url = "postgres://pwxpfinpjbijnz:ff185279623d37be9b00ea394f348c5bf814cc9243a1f78368af3a1a1c646b47@ec2-52-31-94-195.eu-west-1.compute.amazonaws.com:5432/d3kgq0se0ml75b"
+url = "postgres://pwxpfinpjbijnz:ff185279623d37be9b00ea394f348c5bf814cc9243a1f78368af3a1a1c646b47@ec2-52-31-94-195.eu-west-1.compute.amazonaws.com:5432/d3kgq0se0ml75b"
 
 messages = {
   'insert' : 'The data is added.',
   'update' : 'The data is updated.',
   'delete' : 'The data is deleted.',
-  'domains_name_key': 'Domain key should be unique, please try again.',
-  'subdomains_domain_id_fkey': 'Domain has subdomains so the domain key should not deleted.',
-  'users_email_key': 'You must check your credentials!',
   'error': 'Error has been occured. Please contact administrator.'
 }
 
 JOINS = {
     'wsData' : 'SELECT WS.ID, MODIFYDATE, WS.TITLE as ws_title, WS.COLOR as ws_color, WS.DESCRIPTION as ws_description, ws.LISTORDER as ws_order, COUNT(distinct ACCS), count(distinct TSK) FROM workspaces WS LEFT JOIN useraccess ACCS ON WS.id = ACCS.workspaceid LEFT JOIN LIST LST ON WS.id = LST.workspaceid LEFT JOIN TASK TSK ON TSK.listid = LST.id WHERE ws.id = %s GROUP BY WS.ID;',
-    'taskAndUser' : 'SELECT tsk.id AS id,tsk.content AS task_content,tsk.listid AS list_id,tsk.assignedid AS assignedid,tsk.deadline AS end_date,tsk.isdone AS done,tsk.importance AS tsk_importance,tsk.listorder AS list_order,tsk.donedate AS tsk_donedate,usr.name AS user_name,usr.surname AS user_surname FROM task tsk LEFT JOIN users usr ON usr.id=tsk.assignedid WHERE isdone !=True and listid=%s ORDER BY listorder',
+    'taskAndUser' : 'SELECT tsk.id AS id,tsk.content AS task_content,tsk.listid AS list_id,tsk.assignedid AS assignedid,tsk.deadline AS end_date,tsk.isdone AS done,tsk.importance AS tsk_importance,tsk.listorder AS list_order,tsk.donedate AS tsk_donedate,usr.name AS user_name,usr.surname AS user_surname FROM task tsk LEFT JOIN users usr ON usr.id=tsk.assignedid WHERE listid=%s ORDER BY listorder',
     'wsUserList' : 'SELECT usr.id AS id, usr.name AS user_name, usr.surname AS user_surname, usraccss.workspaceid AS ws_id FROM useraccess usraccss JOIN users usr ON usr.id = usraccss.userid WHERE workspaceid = %s',
-    'commentData' : 'SELECT c.id AS c_id,c.userid AS c_userid,c.taskid AS c_taskid,c.content AS c_content,c.modifydate AS c_modifydate,u.name AS u_name,u.surname AS u_surname FROM comments c LEFT JOIN users u on c.userid=u.id WHERE taskid = %s'
+    'commentData' : 'SELECT c.id AS c_id,c.userid AS c_userid,c.taskid AS c_taskid,c.content AS c_content,c.modifydate AS c_modifydate,u.name AS u_name,u.surname AS u_surname FROM comments c LEFT JOIN users u on c.userid=u.id WHERE taskid = %s',
+    'userStats' : 'SELECT * FROM (SELECT COUNT(DISTINCT U2) AS WS_COUNT FROM users u JOIN useraccess u2 on u.id=u2.userid WHERE u.id= %s ) w_count,(SELECT COUNT(DISTINCT T) AS TASK_COUNT FROM users u JOIN task t on u.id=t.assignedid WHERE u.id= %s ) t_count'
 }
 
 def checkUserMail(email):
@@ -526,6 +523,107 @@ def deleteWorkspace(wsId):
         with dbapi2.connect(url) as connection:
             cursor = connection.cursor()
             cursor.execute(f"""DELETE FROM WORKSPACES WHERE id = '{wsId}'""")
+            connection.commit()
+            cursor.close()
+        return True
+    except dbapi2.IntegrityError as e:
+        print(e.diag.constraint_name)
+        print("error: ", e.diag.message_detail)
+        if e.diag.constraint_name in messages:
+            return messages[e.diag.constraint_name], -1
+        return messages['error'], -1
+    except dbapi2.Error as e:
+        print(e.pgcode)
+        print("error: ", e.diag.message_detail)
+        return messages['error'], -1
+
+def userStats(uid):
+    #url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    user = None
+    uid = str(uid)
+    try:
+        with dbapi2.connect(url) as connection:
+            cursor = connection.cursor()
+            cursor.execute(JOINS['userStats'],(str(uid),str(uid),))
+            result = cursor.fetchall()
+            connection.commit()
+            cursor.close()
+        return result
+    except dbapi2.IntegrityError as e:
+        print(e.diag.constraint_name)
+        print("error: ", e.diag.message_detail)
+        if e.diag.constraint_name in messages:
+            return messages[e.diag.constraint_name], -1
+        return messages['error'], -1
+    except dbapi2.Error as e:
+        print(e.pgcode)
+        print("error: ", e.diag.message_detail)
+        return messages['error'], -1
+
+def updateUserPassword(newPassword):
+    #url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    try:
+        with dbapi2.connect(url) as connection:
+            cursor = connection.cursor()
+            query = f"""UPDATE USERS SET password = '{newPassword}' WHERE id = '{current_user.uid}' """
+            cursor.execute(query)
+            res = cursor.rowcount
+            connection.commit()
+            cursor.close()
+        return res
+    except dbapi2.IntegrityError as e:
+        print(e.diag.constraint_name)
+        print("error: ", e.diag.message_detail)
+        if e.diag.constraint_name in messages:
+            return messages[e.diag.constraint_name], -1
+        return messages['error'], -1
+    except dbapi2.Error as e:
+        print(e.pgcode)
+        print("error: ", e.diag.message_detail)
+        return messages['error'], -1
+
+def updateUser(uid, name, surname):
+    #url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    try:
+        with dbapi2.connect(url) as connection:
+            print('sa')
+            cursor = connection.cursor()
+            query = f"""UPDATE USERS SET name = '{name}', surname = '{surname}' WHERE id = '{current_user.uid}' """
+            cursor.execute(query)
+            res = cursor.rowcount
+            connection.commit()
+            cursor.close()
+        return res
+    except dbapi2.IntegrityError as e:
+        print(e.diag.constraint_name)
+        print("error: ", e.diag.message_detail)
+        if e.diag.constraint_name in messages:
+            return messages[e.diag.constraint_name], -1
+        return messages['error'], -1
+    except dbapi2.Error as e:
+        print(e.pgcode)
+        print("error: ", e.diag.message_detail)
+        return messages['error'], -1
+
+def deleteUser():
+    #url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    now = datetime.now()
+    try:
+        with dbapi2.connect(url) as connection:
+            cursor = connection.cursor()
+            cursor.execute(f"""DELETE FROM USERS WHERE id = '{current_user.uid}'""")
             connection.commit()
             cursor.close()
         return True

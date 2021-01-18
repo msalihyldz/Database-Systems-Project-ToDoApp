@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import render_template, flash, request, url_for, redirect
 from passlib.hash import pbkdf2_sha256 as hasher
-from forms import LoginForm, SignupForm, CreateWorkspaceForm, TaskForm
+from forms import LoginForm, SignupForm, CreateWorkspaceForm, TaskForm, PasswordForm
 from account import get_user, User
 from flask_login import login_user, login_required, current_user
 from flask_httpauth import HTTPBasicAuth
@@ -107,3 +107,25 @@ def workspace_page():
 @login_required
 def statistics_page():
     return render_template("statistics.html")
+
+@login_required
+def profile_page():
+    stats = dbop.userStats(current_user.uid)
+    print(stats)
+    form = PasswordForm()
+    if form.validate_on_submit():
+        currentPassword = form.data["currentPassword"]
+        newPassword = form.data["newPassword"]
+        repeatPassword = form.data["repeatPassword"]
+        print(newPassword)
+        if hasher.verify(currentPassword, current_user.password):
+            if newPassword == repeatPassword:
+                if len(newPassword) >= 6:
+                    result = dbop.updateUserPassword(hasher.hash(newPassword))
+                else:
+                    flash("Password must be at least 6 character!", "newPassword")
+            else:
+                flash("Passwords must match!", "repeatPassword")
+        else:
+            flash("Current password is not correct!", "currentPassword")
+    return render_template("profile.html", user = current_user, form = form, stats = stats[0])

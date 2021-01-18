@@ -35,9 +35,7 @@ class User(UserMixin):
         return False
 
 def get_user(user_id):
-    print(user_id)
     user = None
     if user_id > 0:
         user = dbop.getUser(user_id)
-    print("user", user)
     return user

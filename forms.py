@@ -38,3 +38,10 @@ class TaskForm(FlaskForm):
     listId = IntegerField("ListId")
 
     assignedId = IntegerField("AssignedId")
+
+class PasswordForm(FlaskForm):
+    currentPassword = PasswordField("CurrrentPassword", validators=[DataRequired()])
+
+    newPassword = PasswordField("NewPassword", validators=[DataRequired()])
+
+    repeatPassword = PasswordField("RepeatPassword", validators=[DataRequired()])

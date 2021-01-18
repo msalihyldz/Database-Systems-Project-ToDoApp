@@ -119,13 +119,11 @@ def editWorkspace():
     description = jsonData["description"]
     color = jsonData["color"]
     order = jsonData["order"]
-    print(jsonData)
     result = dbop.updateWorkspace(wsId, title, description, color, order)
     if(type(result) == tuple):
         return jsonify(result = "error")
     else:
         return jsonify(result = result)
-    return jsonify(result = 5)
 
 @app.route('/deleteWorkspace', methods=['POST'])
 def deleteWorkspace():
@@ -135,6 +133,28 @@ def deleteWorkspace():
         return "error"
     else:
         return "Ok"
+    
+@app.route('/editUser', methods=['POST'])
+def editUser():
+    jsonData = request.get_json()
+    uId = jsonData["uId"]
+    name = jsonData["name"]
+    surname = jsonData["surname"]
+    result = dbop.updateUser(uId, name, surname)
+    if(type(result) == tuple):
+        return jsonify(result = "error")
+    else:
+        return jsonify(result = result)
+
+@app.route('/deleteUser', methods=['POST'])
+def deleteUser():
+    result = dbop.deleteUser()
+    if(type(result) == tuple):
+        return jsonify(result = "error")
+    else:
+        log_out()
+        print(result)
+        return jsonify(result = "Ok")
 
 def page_not_found(e):
   return render_template('page404.html'), 404
@@ -151,6 +171,11 @@ def create_app():
 
     app.add_url_rule(
         "/signup", view_func=views.signup_page, methods=["GET", "POST"]
+    )
+
+    
+    app.add_url_rule(
+        "/profile", view_func=views.profile_page, methods=["GET", "POST"]
     )
 
     app.add_url_rule("/workspace", view_func=views.workspace_page)

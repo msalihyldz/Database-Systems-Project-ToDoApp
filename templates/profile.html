@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+
+<div class="container">
+    
+    <h2 class="mt-5">Your Profile</h2>
+
+    <div>
+        <h4 class="mt-3">Stats</h4>
+        <div class="p-4">
+            <div class="form-group row">
+                <label for="edit_surname" class="col-sm-3 col-form-label">Total number of workspaces :</label>
+                <div class="col-sm-6">
+                    <label type="text" class="is-large col-form-label">{{ stats[0] }}</label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="edit_surname" class="col-sm-3 col-form-label">Total number of assigned task :</label>
+                <div class="col-sm-6">
+                    <label type="text" class="is-large col-form-label">{{ stats[1] }}</label>
+                </div>
+            </div>
+        </div>
+        <h4>Change your personal informations</h4>
+        <form class="p-4" id="updateUserForm">
+            <div class="form-group row">
+                <input type="number" id="uId" name="uId" class="form-control" value="{{user.uid}}" hidden />
+            </div>
+            <div class="form-group row">
+                <label for="edit_name" class="col-sm-3 col-form-label">Name :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="edit_name" autofocus="True" class="input is-large form-control" placeholder="Title" value="{{user.name}}" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="edit_surname" class="col-sm-3 col-form-label">Surname :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="edit_surname" autofocus="True" class="input is-large form-control" placeholder="Title" value="{{user.surname}}" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="edit_email" class="col-sm-3 col-form-label">Email :</label>
+                <div class="col-sm-6">
+                    <input type="email" id="edit_email" autofocus="True" class="input is-large form-control" placeholder="Title" value="{{user.email}}" disabled />
+                </div>
+            </div>
+            <button id="updateUserButton" class="btn btn-primary">Save Changes</button>
+        </form>
+        <h4>Change your password</h4>
+        <form class="p-4" action="{{ request.path }}" method="post">
+            {{ form.csrf_token }}
+            <div class="form-group row">
+                <label for="Name" class="col-sm-3 col-form-label">Current Password :</label>
+                <div class="col-sm-6">
+                    {{ form.currentPassword( autofocus=True,
+                        class='input is-large form-control',
+                        placeholder='Current Password') }}
+                    {% with errors = get_flashed_messages(category_filter=["currentPassword"]) %}
+                    {% if errors %}
+                    {% for error in errors %}
+                        <p class="error-message">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="Name" class="col-sm-3 col-form-label">New Password :</label>
+                <div class="col-sm-6">
+                    {{ form.newPassword( autofocus=True,
+                        class='input is-large form-control',
+                        placeholder='New Password') }}
+                    {% with errors = get_flashed_messages(category_filter=["newPassword"]) %}
+                    {% if errors %}
+                    {% for error in errors %}
+                        <p class="error-message">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="Name" class="col-sm-3 col-form-label">Repeat New Password :</label>
+                <div class="col-sm-6">
+                    {{ form.repeatPassword( autofocus=True,
+                        class='input is-large form-control',
+                        placeholder='Repeat New Password') }}
+                    {% with errors = get_flashed_messages(category_filter=["repeatPassword"]) %}
+                    {% if errors %}
+                    {% for error in errors %}
+                        <p class="error-message">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Change Password</button>
+        </form>
+        <h4>Delete your account</h4>
+        <div class="p-4">
+            <button id="delete" type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteAccount">Delete My Account!</button>
+        </div>
+        <div class="modal fade" id="deleteAccount" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Delete Account</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <label>I want to delete my account!</label>
+                    <br>
+                    <p style="font-size: 14px; color: #999999;">*Be careful no longer you will be able to access your workspaces and tasks.</p>
+                    <button type="button" id="deleteMyAccount" class="btn btn-danger">Agree and Delete!</button>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    
+
+{% endblock %}
+{% block script%}<script src="/static/js/profile.js"></script>{% endblock%}
