@@ -4,7 +4,55 @@
 <div class="container">
     
     <h2 class="mt-5">Statistics</h2>
-
+    {% for ws in data %}
+        {% if (ws[4] | length) == 0 %}
+            <div class="p-4 m-5" style="border-radius: 15px ;background-color: {{ ws [2] + '20' }};">
+                <h4>{{ ws[1] }}</h4>
+                <p>{{ ws[3] }}</p>
+                <h5 class="m-4">There is no data for this workspace</h5>
+            </div>
+        {% else %}
+            <div class="p-4 m-5" style="border-radius: 15px ;background-color: {{ ws [2] + '20' }};">
+                <h4>{{ ws[1] }}</h4>
+                <p>{{ ws[3] }}</p>
+                <canvas id="{{ws[0]}}" width="400" height="200"></canvas>
+                <script>
+                var ctx = document.getElementById('{{ws[0]}}');
+                var users = []
+                {% for i in ws[4] %}
+                users.push({name: '{{ i[1] + " " + i[2] }}', amount: '{{ i[0] }}'})
+                {% endfor %}
+                console.log(users);
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: users.map(user => user.name),
+                        datasets: [{
+                            label: 'Number of done tasks',
+                            data: users.map(user => user.amount),
+                            backgroundColor: "rgba(39,80,194,0.8)",
+                            borderWidth: 1,
+                            hoverBackgroundColor: "rgba(232,105,90,0.8)",
+                            hoverBorderColor: "orange",
+                            scaleStepWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1
+                                }
+                            }]
+                        }
+                    }
+                });
+                </script>
+            </div>
+        {% endif %}
+    {% endfor %}
+    
 </div>
 
     

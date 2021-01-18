@@ -23,7 +23,9 @@ JOINS = {
     'taskAndUser' : 'SELECT tsk.id AS id,tsk.content AS task_content,tsk.listid AS list_id,tsk.assignedid AS assignedid,tsk.deadline AS end_date,tsk.isdone AS done,tsk.importance AS tsk_importance,tsk.listorder AS list_order,tsk.donedate AS tsk_donedate,usr.name AS user_name,usr.surname AS user_surname FROM task tsk LEFT JOIN users usr ON usr.id=tsk.assignedid WHERE listid=%s ORDER BY listorder',
     'wsUserList' : 'SELECT usr.id AS id, usr.name AS user_name, usr.surname AS user_surname, usraccss.workspaceid AS ws_id FROM useraccess usraccss JOIN users usr ON usr.id = usraccss.userid WHERE workspaceid = %s',
     'commentData' : 'SELECT c.id AS c_id,c.userid AS c_userid,c.taskid AS c_taskid,c.content AS c_content,c.modifydate AS c_modifydate,u.name AS u_name,u.surname AS u_surname FROM comments c LEFT JOIN users u on c.userid=u.id WHERE taskid = %s',
-    'userStats' : 'SELECT * FROM (SELECT COUNT(DISTINCT U2) AS WS_COUNT FROM users u JOIN useraccess u2 on u.id=u2.userid WHERE u.id= %s ) w_count,(SELECT COUNT(DISTINCT T) AS TASK_COUNT FROM users u JOIN task t on u.id=t.assignedid WHERE u.id= %s ) t_count'
+    'userStats' : 'SELECT * FROM (SELECT COUNT(DISTINCT U2) AS WS_COUNT FROM users u JOIN useraccess u2 on u.id=u2.userid WHERE u.id= %s ) w_count,(SELECT COUNT(DISTINCT T) AS TASK_COUNT FROM users u JOIN task t on u.id=t.assignedid WHERE u.id= %s ) t_count',
+    'numberofDoneTasks' : 'SELECT COUNT(DISTINCT T),U.name AS USER_NAME,U.surname AS uSER_SURNAME FROM task T LEFT JOIN list l on l.id=T.listid iNNER JOIN users u on u.id=T.assignedid WHERE workspaceid = %s AND T.isdone GROUP BY U.id',
+    'workspaceData' : 'SELECT WS.id,title,color,description FROM workspaces WS LEFT JOIN useraccess u ON WS.id=u.workspaceid WHERE U.userid = %s'
 }
 
 def checkUserMail(email):
@@ -290,6 +292,7 @@ def getTaskComments(tId):
         print(e.pgcode)
         print("error: ", e.diag.message_detail)
         return messages['error'], -1
+
 def getWorkspaceUsers(wid):
     #url = os.getenv("DATABASE_URL")
     if url is None:
@@ -326,10 +329,10 @@ def addTask(content, listId, assignedId, endDate, importance, listorder):
         with dbapi2.connect(url) as connection:
             cursor = connection.cursor()
             if assignedId != None:
-                print('girdi')
                 cursor.execute(f"""INSERT INTO TASK(content, listid, assignedid, deadline, isdone, importance, listorder) VALUES( '{content}', '{listId}', '{assignedId}', '{endDate}', '{False}', '{importance}', '{listorder}') RETURNING ID""")
             else:
-                cursor.execute(f"""INSERT INTO TASK(content, listid, deadline, isdone) VALUES( '{content}', '{listId}', '{endDate}', '{False}', '{importance}', '{listorder}') RETURNING ID""")
+                print('girdi')
+                cursor.execute(f"""INSERT INTO TASK(content, listid, assignedid, deadline, isdone, importance, listorder) VALUES( '{content}', '{listId}', NULL, '{endDate}', '{False}', '{importance}', '{listorder}') RETURNING ID""")
             print(cursor.query)
             id_ = cursor.fetchone()[0]
             connection.commit()
@@ -627,6 +630,54 @@ def deleteUser():
             connection.commit()
             cursor.close()
         return True
+    except dbapi2.IntegrityError as e:
+        print(e.diag.constraint_name)
+        print("error: ", e.diag.message_detail)
+        if e.diag.constraint_name in messages:
+            return messages[e.diag.constraint_name], -1
+        return messages['error'], -1
+    except dbapi2.Error as e:
+        print(e.pgcode)
+        print("error: ", e.diag.message_detail)
+        return messages['error'], -1
+
+def workspaceStats(wsId):
+    #url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    try:
+        with dbapi2.connect(url) as connection:
+            cursor = connection.cursor()
+            cursor.execute(JOINS['numberofDoneTasks'],(str(wsId),))
+            result = cursor.fetchall()
+            connection.commit()
+            cursor.close()
+        return result
+    except dbapi2.IntegrityError as e:
+        print(e.diag.constraint_name)
+        print("error: ", e.diag.message_detail)
+        if e.diag.constraint_name in messages:
+            return messages[e.diag.constraint_name], -1
+        return messages['error'], -1
+    except dbapi2.Error as e:
+        print(e.pgcode)
+        print("error: ", e.diag.message_detail)
+        return messages['error'], -1
+
+def getUserWorkspacesData(uid):
+    #url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
+    try:
+        with dbapi2.connect(url) as connection:
+            cursor = connection.cursor()
+            cursor.execute(JOINS['workspaceData'],(str(uid),))
+            result = cursor.fetchall()
+            connection.commit()
+            cursor.close()
+        return result
     except dbapi2.IntegrityError as e:
         print(e.diag.constraint_name)
         print("error: ", e.diag.message_detail)

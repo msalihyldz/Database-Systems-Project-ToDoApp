@@ -48,7 +48,7 @@
                             <div class="col-sm-8">
                                 <div class="form-group mb-4">
                                     <div class="datepicker date input-group p-0 shadow-sm">
-                                        <input type="text" class="form-control" id="endDate" data-date-format="dd/mm/yyyy">
+                                        <input type="text" class="form-control" id="endDate" data-date-format="dd/mm/yyyy" autocomplete="off">
                                         <p id="deadline-error"></p>
                                         <div class="input-group-append"><span class="input-group-text px-4"><i class="fa fa-clock-o"></i></span></div>
                                     </div>
@@ -103,13 +103,17 @@
                         {% for task in list[4] %}
                             <div class="task">
                                 <p>{{ task[1] }}</p>
-                                {% if task[4] > task[4].now() %}
+                                {% if task[5] %}
                                     <span class="task-date badge badge-success badge-pill">{{ task[4].strftime('%d/%m/%Y') }}</span>
                                 {% else %}
-                                    <span class="task-date badge badge-danger badge-pill">{{ task[4].strftime('%d/%m/%Y') }}</span>
-                                {% endif %}
-                                {% if task[3] != None %}
-                                    <span class="assigned-member badge badge-assigned badge-pill">{{ task[9] }} {{task[10]}}</span>
+                                    {% if task[4] > task[4].now() %}
+                                        <span class="task-date badge badge-warning badge-pill">{{ task[4].strftime('%d/%m/%Y') }}</span>
+                                    {% else %}
+                                        <span class="task-date badge badge-danger badge-pill">{{ task[4].strftime('%d/%m/%Y') }}</span>
+                                    {% endif %}
+                                    {% if task[3] != None %}
+                                        <span class="assigned-member badge badge-assigned badge-pill">{{ task[9] }} {{task[10]}}</span>
+                                    {% endif %}
                                 {% endif %}
                                 <span class="badge badge-importance badge-pill">Importance: {{task[6]}}</span>
                                 <span style="cursor: pointer;" onclick="fillModal('{{ task[0] }}', '{{ task[1] }}', '{{task[2]}}', '{{ task[3] }}' , '{{ task[4] }}' , '{{ task[5] }}', '{{ task[6] }}', '{{ task[7] }}')" class="task-edit" data-toggle="modal" data-target="#taskEditModal"> <i class="fas fa-pen"></i></span>
@@ -196,7 +200,7 @@
                         <div class="col-sm-8">
                             <div class="form-group mb-4">
                                 <div class="datepicker date input-group p-0 shadow-sm">
-                                    <input type="text" class="form-control" id="edit_endDate" data-date-format="dd/mm/yyyy">
+                                    <input type="text" class="form-control" id="edit_endDate" data-date-format="dd/mm/yyyy" autocomplete="off">
                                     <p id="edit-deadline-error"></p>
                                     <div class="input-group-append"><span class="input-group-text px-4"><i class="fa fa-clock-o"></i></span></div>
                                 </div>

@@ -106,7 +106,17 @@ def workspace_page():
 
 @login_required
 def statistics_page():
-    return render_template("statistics.html")
+    wsArr = dbop.getUserWorkspacesData(current_user.uid)
+    Stats = []
+    if(type(wsArr) != tuple):
+        for i in wsArr:
+            data = dbop.workspaceStats(i[0])
+            if (type(data) != tuple):
+                ws = list(i)
+                ws.append(data)
+                Stats.append(ws)
+    print(Stats)
+    return render_template("statistics.html", data= Stats)
 
 @login_required
 def profile_page():
