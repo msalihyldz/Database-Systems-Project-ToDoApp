@@ -30,19 +30,19 @@
             <div class="form-group row">
                 <label for="edit_name" class="col-sm-3 col-form-label">Name :</label>
                 <div class="col-sm-6">
-                    <input type="text" id="edit_name" autofocus="True" class="input is-large form-control" placeholder="Title" value="{{user.name}}" />
+                    <input type="text" id="edit_name" autofocus="True" class="input is-large form-control" placeholder="Title" value="{{user.name}}" minlength="2" maxlength="256"/>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="edit_surname" class="col-sm-3 col-form-label">Surname :</label>
                 <div class="col-sm-6">
-                    <input type="text" id="edit_surname" autofocus="True" class="input is-large form-control" placeholder="Title" value="{{user.surname}}" />
+                    <input type="text" id="edit_surname" autofocus="True" class="input is-large form-control" placeholder="Title" value="{{user.surname}}" minlength="2" maxlength="256"  />
                 </div>
             </div>
             <div class="form-group row">
                 <label for="edit_email" class="col-sm-3 col-form-label">Email :</label>
                 <div class="col-sm-6">
-                    <input type="email" id="edit_email" autofocus="True" class="input is-large form-control" placeholder="Title" value="{{user.email}}" disabled />
+                    <input type="email" id="edit_email" autofocus="True" class="input is-large form-control" placeholder="Title" value="{{user.email}}"  disabled />
                 </div>
             </div>
             <button id="updateUserButton" class="btn btn-primary">Save Changes</button>

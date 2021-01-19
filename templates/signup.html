@@ -19,7 +19,7 @@
                                 <div class="col-sm-8">
                                     {{ form.name( autofocus=True,
                                         class='input is-large form-control',
-                                        placeholder='Name') }}
+                                        placeholder='Name', minlength='2', maxlength='256') }}
                                     {% with errors = get_flashed_messages(category_filter=["name"]) %}
                                     {% if errors %}
                                     {% for error in errors %}
@@ -36,7 +36,7 @@
                                 <div class="col-sm-8">
                                     {{ form.surname( autofocus=True,
                                         class='input is-large form-control',
-                                        placeholder='Surname') }}
+                                        placeholder='Surname', minlength='2', maxlength='256') }}
                                     {% with errors = get_flashed_messages(category_filter=["surname"]) %}
                                     {% if errors %}
                                     {% for error in errors %}
@@ -53,7 +53,7 @@
                                 <div class="col-sm-8">
                                     {{ form.email( autofocus=True,
                                         class='input is-large form-control',
-                                        placeholder='Email', type='email') }}
+                                        placeholder='Email', type='email', minlength='2', maxlength='256') }}
                                     {% with errors = get_flashed_messages(category_filter=["email"]) %}
                                     {% if errors %}
                                     {% for error in errors %}

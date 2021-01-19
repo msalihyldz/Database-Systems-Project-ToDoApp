@@ -16,7 +16,7 @@
                         <div class="form-group row">
                             <label for="content" class="col-sm-3 col-form-label">Content:</label>
                             <div class="col-sm-8">
-                                <textarea id="content" name="content" autofocus="True" class="input is-large form-control" placeholder="Content" rows="2" required></textarea>
+                                <textarea id="content" name="content" autofocus="True" class="input is-large form-control" placeholder="Content" rows="2" minlength="2" maxlength="2048" required></textarea>
                                 <p id="content-error"></p>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                             <div class="col-sm-8">
                                 <div class="form-group mb-4">
                                     <div class="datepicker date input-group p-0 shadow-sm">
-                                        <input type="text" class="form-control" id="endDate" data-date-format="dd/mm/yyyy" autocomplete="off">
+                                        <input type="text" class="form-control" id="endDate" data-date-format="dd/mm/yyyy" autocomplete="off" minlength="8" maxlength="10">
                                         <p id="deadline-error"></p>
                                         <div class="input-group-append"><span class="input-group-text px-4"><i class="fa fa-clock-o"></i></span></div>
                                     </div>
@@ -111,9 +111,9 @@
                                     {% else %}
                                         <span class="task-date badge badge-danger badge-pill">{{ task[4].strftime('%d/%m/%Y') }}</span>
                                     {% endif %}
-                                    {% if task[3] != None %}
-                                        <span class="assigned-member badge badge-assigned badge-pill">{{ task[9] }} {{task[10]}}</span>
-                                    {% endif %}
+                                {% endif %}
+                                {% if task[3] != None %}
+                                    <span class="assigned-member badge badge-assigned badge-pill">{{ task[9] }} {{task[10]}}</span>
                                 {% endif %}
                                 <span class="badge badge-importance badge-pill">Importance: {{task[6]}}</span>
                                 <span style="cursor: pointer;" onclick="fillModal('{{ task[0] }}', '{{ task[1] }}', '{{task[2]}}', '{{ task[3] }}' , '{{ task[4] }}' , '{{ task[5] }}', '{{ task[6] }}', '{{ task[7] }}')" class="task-edit" data-toggle="modal" data-target="#taskEditModal"> <i class="fas fa-pen"></i></span>
@@ -132,7 +132,7 @@
                                     {% endfor %}
                                 </div>
                                 <div class="addComment comment">
-                                    <input class="input comment-input" data-taskid="{{task[0]}}" placeholder="Add a comment" type="text" >
+                                    <input class="input comment-input" data-taskid="{{task[0]}}" placeholder="Add a comment" type="text" minlength="2" maxlength="2048" >
                                     <button type="button" class="btn btn-primary btn-sm" onclick="addComment('{{task[0]}}')">Add</button>
                                 </div>
                             </div>
@@ -168,7 +168,7 @@
                     <div class="form-group row">
                         <label for="content" class="col-sm-3 col-form-label">Content:</label>
                         <div class="col-sm-8">
-                            <textarea id="edit_content" name="edit_content" autofocus="True" class="input is-large form-control" placeholder="Content" rows="2" required></textarea>
+                            <textarea id="edit_content" name="edit_content" autofocus="True" class="input is-large form-control" placeholder="Content" rows="2" minlength="2" maxlength="2048" required></textarea>
                             <p id="edit-content-error"></p>
                         </div>
                     </div>
@@ -200,7 +200,7 @@
                         <div class="col-sm-8">
                             <div class="form-group mb-4">
                                 <div class="datepicker date input-group p-0 shadow-sm">
-                                    <input type="text" class="form-control" id="edit_endDate" data-date-format="dd/mm/yyyy" autocomplete="off">
+                                    <input type="text" class="form-control" id="edit_endDate" data-date-format="dd/mm/yyyy" autocomplete="off" minlength="8" maxlength="10">
                                     <p id="edit-deadline-error"></p>
                                     <div class="input-group-append"><span class="input-group-text px-4"><i class="fa fa-clock-o"></i></span></div>
                                 </div>
@@ -239,10 +239,6 @@
           </div>
         </div>
       </div>
-    <!--<p><input type=text size=5 name=a> +
-        <input type=text size=5 name=b> =
-        <span id=result>?</span>
-    <p><a href=# id=calculate>calculate server side</a>-->
 </div>
     
 
