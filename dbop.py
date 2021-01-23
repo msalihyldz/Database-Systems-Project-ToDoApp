@@ -7,9 +7,9 @@ from flask_login import current_user
 
 import account
 
-#url = os.getenv("DATABASE_URL")
+url = os.getenv("DATABASE_URL")
 
-url = "postgres://pwxpfinpjbijnz:ff185279623d37be9b00ea394f348c5bf814cc9243a1f78368af3a1a1c646b47@ec2-52-31-94-195.eu-west-1.compute.amazonaws.com:5432/d3kgq0se0ml75b"
+#url = "postgres://pwxpfinpjbijnz:ff185279623d37be9b00ea394f348c5bf814cc9243a1f78368af3a1a1c646b47@ec2-52-31-94-195.eu-west-1.compute.amazonaws.com:5432/d3kgq0se0ml75b"
 
 messages = {
   'insert' : 'The data is added.',
