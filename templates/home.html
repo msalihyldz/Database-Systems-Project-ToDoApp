@@ -5,8 +5,21 @@
     <div class="container">
         <div  class="row row-header">
             <div class="col-12 col-sm-6">
+                {% if user.uid == 38 or user.uid == 33 %}
+                <h1>İyi ki Doğdun Aslı</h1>
+                <p> Aslı büyüdü 23 oldu </p>
+                <div class="row">
+                    <div class="col-6">
+                        <img style="height: 350px;" src="/static/images/image1.jpeg">
+                    </div>
+                    <div class="col-6">
+                        <img style="height: 350px;" src="/static/images/image2.jpeg">
+                    </div>
+                </div>
+                {% else %}
                 <h1>Welcome {{user.name}}</h1>
                 <p>This application helps you to arrange and classify your jobs. Also, you can use workspaces as a team. <b>Enjoy being organized!</b> </p>
+                {% endif %}
             </div>
             <div class="col-12 col-sm">
             </div>
